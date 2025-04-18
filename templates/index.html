@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crop Recommendation Dashboard</title>
+  <!-- Include any external CSS here if needed -->
+  <style>
+    /* Set the full-page background image */
+    body {
+      margin: 0;
+      padding: 0;
+      background: url("static/67656270418611734697584Thumb.jpg") no-repeat center center fixed;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      color: #333;
+    }
+    /* Overlay to darken the background for readability */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+    /* Centered container for content */
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 600px;
+      margin: 80px auto;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #28a745;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #218838;
+    }
+    #result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="container">
+    <h1>Crop Recommendation</h1>
+    <form id="cropForm">
+      <div class="form-group">
+        <label for="n">N value:</label>
+        <input type="number" id="n" placeholder="N value" required>
+      </div>
+      <div class="form-group">
+        <label for="p">P value:</label>
+        <input type="number" id="p" placeholder="P value" required>
+      </div>
+      <div class="form-group">
+        <label for="k">K value:</label>
+        <input type="number" id="k" placeholder="K value" required>
+      </div>
+      <div class="form-group">
+        <label for="temperature">Temperature:</label>
+        <input type="number" id="temperature" placeholder="Temperature" required step="0.1">
+      </div>
+      <div class="form-group">
+        <label for="humidity">Humidity:</label>
+        <input type="number" id="humidity" placeholder="Humidity" required step="0.1">
+      </div>
+      <div class="form-group">
+        <label for="ph">pH:</label>
+        <input type="number" id="ph" placeholder="pH" required step="0.1">
+      </div>
+      <div class="form-group">
+        <label for="rainfall">Rainfall:</label>
+        <input type="number" id="rainfall" placeholder="Rainfall" required step="0.1">
+      </div>
+      <button type="submit">Get Recommendation</button>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById('cropForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const data = {
+        n: document.getElementById('n').value,
+        p: document.getElementById('p').value,
+        k: document.getElementById('k').value,
+        temperature: document.getElementById('temperature').value,
+        humidity: document.getElementById('humidity').value,
+        ph: document.getElementById('ph').value,
+        rainfall: document.getElementById('rainfall').value
+      };
+
+      fetch('http://localhost:5000/recommend', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        document.getElementById('result').innerHTML = 'Recommended Crop: ' + result.crop;
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  </script>
+</body>
+</html>
